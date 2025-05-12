@@ -14,12 +14,8 @@ public class MessageMapper {
       public MessageDTO toMessageDTO(Message message) {
             MessageDTO messageDTO = new MessageDTO();
             BeanUtils.copyProperties(message, messageDTO);
-            if (message.getChatRoom() != null) {
-                  messageDTO.setChatRoomID(message.getChatRoom().getId());
-            }
-            if (message.getUser() != null) {
-                  messageDTO.setSender(message.getUser().getUsername());
-            }
+            messageDTO.setChatRoomID(message.getChatRoom().getId());
+            messageDTO.setSender(message.getUser().getUsername());
             return messageDTO;
       }
 

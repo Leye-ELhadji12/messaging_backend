@@ -11,8 +11,8 @@ public class ChatRoomDTO {
       private UUID id;
       private String name;
       private Boolean isGroup;
-      private LocalDateTime createdDate;
-      private UUID createdById;
+      private LocalDateTime createdDate; 
+      private String createdById;
       private List<ChatParticipantsDTO> participants;
       private List<MessageDTO> messages;
 }
