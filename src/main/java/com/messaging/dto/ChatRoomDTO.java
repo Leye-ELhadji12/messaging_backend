@@ -14,5 +14,5 @@ public class ChatRoomDTO {
       private LocalDateTime createdDate; 
       private String createdById;
       private List<ChatParticipantsDTO> participants;
-      private List<MessageDTO> messages;
+      private MessageDTO messages;
 }

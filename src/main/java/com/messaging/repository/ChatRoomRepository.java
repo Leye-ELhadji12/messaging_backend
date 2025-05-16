@@ -1,6 +1,7 @@
 package com.messaging.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +27,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID>{
                   "GROUP BY cr.id " +
                   "HAVING COUNT(CASE WHEN p.user.username IN :participants THEN 1 END) = :participantCount " +
                         "AND COUNT(DISTINCT p.user.username) = :participantCount")
-      ChatRoom findChatRoomByParticipants(@Param("participants") List<String> participants,
+      Optional<ChatRoom> findChatRoomByParticipants(@Param("participants") List<String> participants,
                                     @Param("participantCount") long participantCount);
 
       List<ChatRoom> findByCreatedByUsername(String username);
@@ -51,6 +52,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID>{
             "GROUP BY cr.id " +
             "HAVING COUNT(m.content) > 0 " +
             "ORDER BY MAX(m.dateSentMessage) DESC")
-      List<ChatRoom> findMessageAtLeastOneContent(@Param("username") String username);
+      List<ChatRoom> findChatRoomAtLeastOneContent(@Param("username") String username);
 
 }

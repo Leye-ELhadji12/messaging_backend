@@ -28,10 +28,6 @@ public class ChatRoomMapper {
                               .map(chatParticipantsMapper::toChatParticipantsDTO)
                               .toList();
             chatRoomDTO.setParticipants(participants);
-            List<MessageDTO> messages = chatRoom.getMessages().stream()
-                              .map(messageMapper::toMessageDTO)
-                              .toList();
-            chatRoomDTO.setMessages(messages);
             return chatRoomDTO;
       }
 
@@ -45,10 +41,6 @@ public class ChatRoomMapper {
                   .map(chatParticipantsMapper::toChatParticipantsDTO)
                   .toList();
             chatRoomDTO.setParticipants(participants);
-            List<MessageDTO> messages = chatRoom.getMessages().stream()
-                  .map(messageMapper::toMessageDTO)
-                  .toList();
-            chatRoomDTO.setMessages(messages);
             return chatRoom;
       }
 }
