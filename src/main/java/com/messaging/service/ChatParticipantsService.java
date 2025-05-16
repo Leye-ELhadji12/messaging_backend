@@ -7,11 +7,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.messaging.dto.ChatParticipantsDTO;
-import com.messaging.dto.ChatRoomDTO;
 import com.messaging.entity.ChatParticipants;
 import com.messaging.mapper.ChatParticipantsMapper;
 import com.messaging.repository.ChatParticipantsRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,6 +21,7 @@ public class ChatParticipantsService {
       private final ChatParticipantsMapper chatParticipantsMapper;
       private final ChatParticipantsRepository chatParticipantsRepository;
 
+      @Transactional
       public List<ChatParticipantsDTO> getChatRoomId(UUID chatRoomUuid) {
             return chatParticipantsRepository.findByChatRoomId(chatRoomUuid)
                   .stream()
@@ -28,6 +29,7 @@ public class ChatParticipantsService {
                   .toList();
       }
 
+      @Transactional
       public ChatParticipantsDTO updateLastSeen(UUID chatRoomUuid, String username) {
             ChatParticipants participants = chatParticipantsRepository.findByChatRoomIdAndUsername(chatRoomUuid, username);
             participants.setLastSeen(LocalDateTime.now());
