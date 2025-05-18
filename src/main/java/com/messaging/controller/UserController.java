@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -42,7 +43,7 @@ public class UserController {
       }
 
       @GetMapping("/{username}")
-      public ResponseEntity<UserDTO> getMethodName(@RequestParam String username) {
+      public ResponseEntity<UserDTO> getMethodName(@PathVariable String username) {
             return ResponseEntity.ok(userService.getUserByUsername(username));
       }
 

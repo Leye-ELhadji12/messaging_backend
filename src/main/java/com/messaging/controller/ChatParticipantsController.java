@@ -1,9 +1,14 @@
 package com.messaging.controller;
 
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.messaging.repository.ChatParticipantsRepository;
+import com.messaging.dto.ChatParticipantsDTO;
 import com.messaging.service.ChatParticipantsService;
 
 import lombok.RequiredArgsConstructor;
@@ -13,7 +18,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatParticipantsController {
 
-      private final ChatParticipantsRepository chatParticipantsRepository;
       private final ChatParticipantsService chatParticipantsService;
+
+      @PostMapping("/update-last-seen/{roomId}/{username}")
+      public ResponseEntity<ChatParticipantsDTO> updateLastSeen(@PathVariable UUID roomId,
+                                                            @PathVariable String username) {
+            return ResponseEntity.ok(chatParticipantsService.updateLastSeen(roomId, username));
+      }
 
 }
