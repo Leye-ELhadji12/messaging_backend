@@ -20,10 +20,10 @@ public class ChatParticipantsController {
 
       private final ChatParticipantsService chatParticipantsService;
 
-      @PostMapping("/update-last-seen/{roomId}/{username}")
-      public ResponseEntity<ChatParticipantsDTO> updateLastSeen(@PathVariable UUID roomId,
+      @PostMapping("/update-last-seen/{chatroomId}/{username}")
+      public ResponseEntity<ChatParticipantsDTO> updateLastSeen(@PathVariable UUID chatroomId,
                                                             @PathVariable String username) {
-            return ResponseEntity.ok(chatParticipantsService.updateLastSeen(roomId, username));
+            return ResponseEntity.ok(chatParticipantsService.updateLastSeen(chatroomId, username));
       }
 
 }
