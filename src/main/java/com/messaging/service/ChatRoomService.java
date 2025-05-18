@@ -1,6 +1,7 @@
 package com.messaging.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -33,28 +34,30 @@ public class ChatRoomService {
     private final ChatParticipantsService chatParticipantsService;
 
     @Transactional
-    public ChatRoomDTO findChatRoomByMembers(List<String> members) {
-        return chatRoomRepository.findChatRoomByParticipants(members, members.size())
-                .map(chatRoomMapper::toChatRoomDTO)
-                .orElseThrow(() -> new ChatRoomNotFoundException(members + " not exits"));
+    public ChatRoomDTO findChatRoomByParticipants(List<String> participants) {
+        return chatRoomRepository.findChatRoomByParticipants(participants, participants.size())
+                .map(chatroom -> {
+                    ChatRoomDTO chatRoomDTO = chatRoomMapper.toChatRoomDTO(chatroom);
+                    List<ChatParticipantsDTO> roomParticipants = chatParticipantsService.getChatRoomId(chatRoomDTO.getId());
+                    chatRoomDTO.setParticipants(roomParticipants);
+                    return chatRoomDTO;
+                })
+                .orElseThrow(() -> new ChatRoomNotFoundException(participants + " not exits"));
     }
 
     @Transactional
-    public ChatRoomDTO createChatRoom(List<String> members, String username) {
-        final User user = userRepository.findById(username)
+    public ChatRoomDTO createChatRoom(List<String> participants, String username) {
+        User user = userRepository.findById(username)
                             .orElseThrow(() -> new UserNotFoundException(username + " not exits"));
-
         ChatRoom chatRoom = ChatRoom.builder()
-                .isGroup(members.size() > 2)
+                .isGroup(participants.size() > 2)
                 .createdBy(user)
                 .participants(new ArrayList<>())
                 .messages(new ArrayList<>())
                 .build();
-
-        final List<User> users = userRepository.findAllByUsernameIn(members);
-
+        List<User> users = userRepository.findAllByUsernameIn(participants);
         users.forEach(u -> {
-            final ChatParticipants participant = ChatParticipants.builder()
+            ChatParticipants participant = ChatParticipants.builder()
                     .chatRoom(chatRoom)
                     .user(u)
                     .isAdmin(u.getUsername().equals(username))
@@ -62,33 +65,40 @@ public class ChatRoomService {
                     .build();
             chatRoom.getParticipants().add(participant);
         });
-
         Message message = Message.builder()
                 .content("Hi")
                 .dateSentMessage(LocalDateTime.now())
                 .chatRoom(chatRoom)
                 .user(user)
                 .build();
-
         chatRoom.getMessages().add(message);
-
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
-
         return chatRoomMapper.toChatRoomDTO(savedChatRoom);
     }
 
     @Transactional
-    public List<ChatRoomDTO> findChatRoomAtLeastOneContent(final String username) {
+    public List<ChatRoomDTO> findChatRoomAtLeastOneContent(String username) {
         return chatRoomRepository.findChatRoomAtLeastOneContent(username)
                 .stream()
                 .map(chatRoom -> {
-                    final ChatRoomDTO chatRoomDTO = chatRoomMapper.toChatRoomDTO(chatRoom);
-                    final MessageDTO lastMessage = messageService.lastMessage(chatRoom.getId());
+                    ChatRoomDTO chatRoomDTO = chatRoomMapper.toChatRoomDTO(chatRoom);
+                    MessageDTO lastMessage = messageService.lastMessage(chatRoom.getId());
                     chatRoomDTO.setMessages(lastMessage);
-                    final List<ChatParticipantsDTO> participants = chatParticipantsService.getChatRoomId(chatRoom.getId());
+                    List<ChatParticipantsDTO> participants = chatParticipantsService.getChatRoomId(chatRoom.getId());
                     chatRoomDTO.setParticipants(participants);
                     return chatRoomDTO;
                 })
                 .toList();
+    }
+
+    public ChatRoomDTO findById(UUID roomId) {
+        return chatRoomRepository.findById(roomId)
+                .map(chatroom -> {
+                    ChatRoomDTO chatRoomDTO = chatRoomMapper.toChatRoomDTO(chatroom);
+                    List<ChatParticipantsDTO> roomParticipants = chatParticipantsService.getChatRoomId(chatRoomDTO.getId());
+                    chatRoomDTO.setParticipants(roomParticipants);
+                    return chatRoomDTO;
+                })
+                .orElseThrow(() -> new ChatRoomNotFoundException(roomId + " not exits"));
     }
 }
