@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.messaging.dto.ChatParticipantsDTO;
 import com.messaging.dto.ChatRoomDTO;
-import com.messaging.dto.MessageDTO;
 import com.messaging.entity.ChatRoom;
 import com.messaging.entity.User;
 
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomMapper {
 
       private final ChatParticipantsMapper chatParticipantsMapper;
-      private final MessageMapper messageMapper;
 
       public ChatRoomDTO toChatRoomDTO(ChatRoom chatRoom) {
             ChatRoomDTO chatRoomDTO = new ChatRoomDTO();

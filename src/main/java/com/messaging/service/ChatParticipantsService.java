@@ -31,7 +31,7 @@ public class ChatParticipantsService {
 
       @Transactional
       public ChatParticipantsDTO updateLastSeen(UUID chatRoomUuid, String username) {
-            ChatParticipants participants = chatParticipantsRepository.findByChatRoomIdAndUsername(chatRoomUuid, username);
+            ChatParticipants participants = chatParticipantsRepository.findByChatRoomIdAndUserUsername(chatRoomUuid, username);
             participants.setLastSeen(LocalDateTime.now());
             return chatParticipantsMapper.toChatParticipantsDTO(chatParticipantsRepository.save(participants));
       }

@@ -7,19 +7,12 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.messaging.entity.ChatRoom;
 
+@Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID>{
-
-      // @Query("SELECT cr FROM ChatRoom cr " +
-      //       "JOIN cr.participants p " +
-      //       "WHERE p.user.username IN :participants " +
-      //       "GROUP BY cr.id " +
-      //       "HAVING COUNT(CASE WHEN p.user.username IN :participants THEN 1 END) = :participantCount" +
-      //                   "AND COUNT(DISTINCT p.user.username) = :participantCount")
-      // ChatRoom findChatRoomByParticipants(@Param("participants") List<String> participants,
-      //                               @Param("participantCount") long participantCount);
 
       @Query("SELECT cr FROM ChatRoom cr " +
                   "JOIN cr.participants p " +
@@ -45,7 +38,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID>{
                   "WHERE cr.isGroup = false")
       List<ChatRoom> findAllPrivateChatRooms();
 
-      @Query("SELECT cr FROM chatRoom cr " +
+      @Query("SELECT cr FROM ChatRoom cr " +
             "JOIN cr.messages m " +
             "JOIN cr.participants p " +
             "WHERE p.user.username = :username " +
